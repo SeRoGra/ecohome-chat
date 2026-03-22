@@ -32,7 +32,7 @@ function Bubble({ msg, isOwn, showAvatar }) {
   );
 }
 
-export default function ChatScreen({ token, username, role, onLogout }) {
+export default function ChatScreen({ token, username, role, onLogout, onSwitchView }) {
   const [input, setInput] = useState('');
   const { messages, connected, error, sendMessage } = useSocket(token);
   const bottomRef = useRef(null);
@@ -67,7 +67,14 @@ export default function ChatScreen({ token, username, role, onLogout }) {
           <span className="cs-logo__text">EcoHome</span>
         </div>
         <nav className="cs-nav">
-          <div className="cs-section">Canales</div>
+          <div className="cs-section">Vistas</div>
+          <div className="cs-channel" onClick={() => onSwitchView?.('products')}>
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"/>
+            </svg>
+            <span>Catálogo</span>
+          </div>
+          <div className="cs-section" style={{marginTop:8}}>Canales</div>
           <div className="cs-channel cs-channel--active">
             <svg viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd"/></svg>
             <span># general</span>

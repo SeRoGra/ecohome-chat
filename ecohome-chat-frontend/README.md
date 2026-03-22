@@ -1,60 +1,72 @@
 # EcoHome Chat — Frontend
 
-Aplicación **React 18** con **socket.io-client** para el chat corporativo en tiempo real de EcoHome Store.
+Aplicación **React 18** con **socket.io-client** para el chat corporativo y catálogo de productos de EcoHome Store.
+
+> **Unidad 3**: se agregó pantalla de Catálogo de Productos con trazabilidad (creador) y contador dinámico `"Usuario (N)"`.
 
 ## Tecnologías
 
 - **React 18** — UI con hooks y lazy loading
 - **socket.io-client 4** — Comunicación WebSocket con reconexión automática
-- **React Router 6** — Navegación SPA
+- **Axios** — Cliente HTTP para endpoints REST
 - **CSS custom** — Diseño inspirado en Slack/Discord con tema oscuro
 
 ## Estructura del proyecto
 
 ```
 src/
-├── App.jsx                 ← Router principal con lazy loading
+├── App.jsx                    ← Router con navegación entre vistas (products/chat)
+├── api/
+│   └── chatApi.js             ← Cliente Axios + helpers: login, register, getHistory,
+│                                 getProducts, createProduct, getUserStats
 ├── components/
-│   ├── LoginScreen.jsx     ← Formulario de login/registro
-│   ├── LoginScreen.css
-│   ├── ChatScreen.jsx      ← Chat principal: sidebar + mensajes + input
-│   └── ChatScreen.css
+│   ├── Login.jsx              ← Formulario de login/registro
+│   ├── Login.css
+│   ├── ChatScreen.jsx         ← Chat en tiempo real: sidebar + mensajes + input
+│   ├── ChatScreen.css
+│   ├── ProductsScreen.jsx     ← Catálogo: lista + formulario creación + contador (Unidad 3)
+│   └── ProductsScreen.css
 ├── hooks/
-│   └── useSocket.js        ← Hook Socket.IO: conexión, eventos, envío
-└── index.js
+│   ├── useAuth.js             ← Hook de autenticación con localStorage
+│   └── useSocket.js           ← Hook Socket.IO: mensajes, conexión
+└── styles/
+    └── global.css             ← Variables CSS y reset global
 ```
 
 ## Ejecución
 
 ```bash
 npm install
-npm start       # Desarrollo en http://localhost:3000
-npm run build   # Build de producción
+npm start
 ```
 
-## Variables de entorno (.env)
+Disponible en `http://localhost:3000`. Requiere el backend corriendo en `http://localhost:8080`.
 
-| Variable | Default | Descripción |
-|----------|---------|-------------|
-| `REACT_APP_API_URL` | http://localhost:8080 | URL del backend |
+## Variable de entorno
 
-## Funcionalidades
-
-- **Login/Registro** — Autenticación JWT contra el backend
-- **Chat en tiempo real** — Mensajes vía Socket.IO con broadcast
-- **Historial** — Últimos 10 mensajes cargados al conectar
-- **Indicador de conexión** — Pill verde/rojo según estado del socket
-- **Avatares por rol** — Colores diferenciados: Ventas (verde), Logística (azul), Soporte (amarillo)
-- **Separadores de fecha** — Agrupa mensajes por día (Hoy, Ayer, fecha)
-- **Persistencia de sesión** — Token y datos de usuario en localStorage
-
-## Hook `useSocket`
-
-```javascript
-const { messages, connected, error, sendMessage } = useSocket(token);
+```bash
+# .env
+REACT_APP_API_URL=http://localhost:8080
 ```
 
-- `messages` — Array de mensajes (historial + tiempo real)
-- `connected` — Estado de conexión Socket.IO
-- `error` — Error de conexión (si hay)
-- `sendMessage(text)` — Emite `new-message` al servidor
+## Funcionalidades (Unidad 3)
+
+### Pantalla de Catálogo (`/products`)
+- **Header dinámico**: muestra `"Username (N)"` con el conteo de productos creados por el usuario
+- **Lista de productos**: nombre, precio, stock y creador (`creator_username`) de cada producto
+- **Formulario de creación**: nombre, descripción (opcional), precio, stock
+- **Actualización dinámica**: tras crear un producto, el contador se incrementa inmediatamente sin recargar la página
+- **Navegación**: botón en sidebar para cambiar entre Catálogo y Chat
+
+### Pantalla de Chat (existente)
+- Mensajes en tiempo real vía Socket.IO
+- Separadores de fecha, avatares por rol, indicador de conexión
+- **Nuevo**: enlace a Catálogo en el sidebar
+
+## Cuentas de prueba
+
+| Usuario | Contraseña | Rol |
+|---------|-----------|-----|
+| `ventas_admin` | `password123` | VENTAS |
+| `logistica_op` | `password123` | LOGISTICA |
+| `soporte_01`   | `password123` | SOPORTE |

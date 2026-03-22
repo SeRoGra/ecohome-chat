@@ -1,16 +1,19 @@
 import React, { useState, useCallback } from 'react';
-const Login      = React.lazy(() => import('./components/Login'));
-const ChatScreen = React.lazy(() => import('./components/ChatScreen'));
+const Login          = React.lazy(() => import('./components/Login'));
+const ChatScreen     = React.lazy(() => import('./components/ChatScreen'));
+const ProductsScreen = React.lazy(() => import('./components/ProductsScreen'));
 
 export default function App() {
   const [token,    setToken]    = useState(() => localStorage.getItem('token'));
   const [username, setUsername] = useState(() => localStorage.getItem('username'));
   const [role,     setRole]     = useState(() => localStorage.getItem('role'));
+  const [view,     setView]     = useState('products'); // 'products' | 'chat'
 
   const handleSuccess = useCallback(() => {
     setToken(localStorage.getItem('token'));
     setUsername(localStorage.getItem('username'));
     setRole(localStorage.getItem('role'));
+    setView('products');
   }, []);
 
   const handleLogout = useCallback(() => {
@@ -26,7 +29,9 @@ export default function App() {
     }>
       {!token
         ? <Login onSuccess={handleSuccess}/>
-        : <ChatScreen token={token} username={username} role={role} onLogout={handleLogout}/>
+        : view === 'chat'
+          ? <ChatScreen     token={token} username={username} role={role} onLogout={handleLogout} onSwitchView={setView}/>
+          : <ProductsScreen token={token} username={username} role={role} onLogout={handleLogout} onSwitchView={setView}/>
       }
     </React.Suspense>
   );
