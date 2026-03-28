@@ -1,3 +1,8 @@
+# ⚠️ Deprecated
+
+Este repositorio ya no se mantiene.  
+Por favor usar: https://github.com/SeRoGra/ecohome-store
+
 # EcoHome Store — Backend Centralizado + Frontend React
 
 Stack: **Express.js** · **Socket.IO** · **PostgreSQL** · **JWT** · **React 18** · **Docker Compose**
